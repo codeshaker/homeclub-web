@@ -28,33 +28,47 @@ class SignUp extends Component {
           <h5 className="grey-text text-darken-3">Sign up</h5>
 
           <div className="input-field">
-            <label type="string">Name</label>
-            <input type="string" id="name" onChange={this.handleChange} />
+            <label type="text">Name</label>
+            <input type="text" id="name" onChange={this.handleChange} />
           </div>
 
           <div className="input-field">
-            <label type="number">Mobile No</label>
-            <input type="number" id="phone" onChange={this.handleChange} />
+            <label type="tel">Mobile No</label>
+            <input
+              type="tel"
+              id="phone"
+              class="validate"
+              onChange={this.handleChange}
+            />
           </div>
 
           <div className="input-field">
             <label htmlFor="email">Email</label>
-            <input type="email" id="email" onChange={this.handleChange} />
+            <input
+              type="email"
+              id="email"
+              class="validate"
+              onChange={this.handleChange}
+            />
           </div>
 
           <div className="input-field">
-            <label htmlFor="string">Address</label>
-            <input type="string" id="address" onChange={this.handleChange} />
+            <label htmlFor="text">Address</label>
+            <input type="text" id="address" onChange={this.handleChange} />
           </div>
 
           <div className="input-field">
-            <label type="string">Gender</label>
-            <input type="string" id="gender" onChange={this.handleChange} />
+            <label type="text">Gender</label>
+            <input type="text" id="gender" onChange={this.handleChange} />
           </div>
 
           <div className="input-field">
-            <label type="date">DOB</label>
-            <input type="date" id="dateOfBirth" onChange={this.handleChange} />
+            <input
+              type="date"
+              id="dateOfBirth"
+              class="validate"
+              onChange={this.handleChange}
+            />
           </div>
 
           <div className="input-field">

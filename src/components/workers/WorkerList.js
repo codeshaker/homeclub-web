@@ -1,13 +1,15 @@
 import React from "react";
 import WorkerSummary from "./WorkerSummary";
 
-const WorkerList = () => {
+const WorkerList = ({ workers }) => {
   return (
-    <ul class="collection">
-      <WorkerSummary />
-      <WorkerSummary />
-      <WorkerSummary />
-    </ul>
+    <div class="col s12 m7">
+      <h2 class="header">Worker List</h2>
+      {workers &&
+        workers.map(worker => {
+          return <WorkerSummary worker={worker} key={worker.id} />;
+        })}
+    </div>
   );
 };
 
