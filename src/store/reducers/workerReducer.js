@@ -52,11 +52,13 @@ const workerReducer = (state = initState, action) => {
   switch (action.type) {
     case "CREATE_WORKER":
       console.log("create worker");
-      break;
+      return state;
+    case "CREATE_WORKER_ERROR":
+      console.log("create worker error", action.err);
+      return state;
     default:
-      break;
+      return state;
   }
-  return state;
 };
 
 export default workerReducer;
