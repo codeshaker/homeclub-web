@@ -20,6 +20,7 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = state => {
+  console.log("in dashboard");
   console.log(state);
   return {
     workers: state.firestore.ordered.workers

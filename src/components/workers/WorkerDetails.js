@@ -4,7 +4,6 @@ import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 
 const WorkerDetails = props => {
-  console.log(props);
   const { worker } = props;
   if (worker) {
     return (
