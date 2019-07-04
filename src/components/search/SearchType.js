@@ -1,17 +1,17 @@
 import React from "react";
 import SearchOption from "./SearchOption";
 
-const SearchType = ({ cities }) => {
-  console.log("in search type");
-  console.log(cities);
+const SearchType = props => {
+  const { options } = props;
+  const label = props.label;
   return (
     <select class="browser-default">
       <option value="" disabled selected>
-        Enter City
+        {label}
       </option>
-      {cities &&
-        cities.map(city => {
-          return <SearchOption city={city} />;
+      {options &&
+        options.map(option => {
+          return <SearchOption option={option} />;
         })}
     </select>
   );

@@ -7,7 +7,7 @@ import { compose } from "redux";
 import { firestoreConnect } from "react-redux-firebase";
 
 // Imagine you have a list of languages that you'd like to autosuggest.
-const languages = [
+const areaNames = [
   {
     name: "masjid banda"
   },
@@ -35,8 +35,9 @@ const getSuggestions = value => {
 
   return inputLength === 0
     ? []
-    : languages.filter(
-        lang => lang.name.toLowerCase().slice(0, inputLength) === inputValue
+    : areaNames.filter(
+        areaName =>
+          areaName.name.toLowerCase().slice(0, inputLength) === inputValue
       );
 };
 
@@ -93,7 +94,7 @@ class SearchWorker extends Component {
     const { value, suggestions } = this.state;
 
     const { cities } = this.props;
-    console.log(this.props);
+    const { workerType } = this.props;
 
     // Autosuggest will pass through all these props to the input.
     const inputProps = {
@@ -104,7 +105,14 @@ class SearchWorker extends Component {
 
     return (
       <div className="container center">
-        <SearchType cities={cities} />
+        <SearchType options={workerType} label="Enter WorkerType" />
+
+        <br />
+        <br />
+        <br />
+        <br />
+
+        <SearchType options={cities} label="Enter City" />
 
         <br />
         <br />
@@ -125,14 +133,15 @@ class SearchWorker extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log("in search worker");
   console.log(state);
   return {
-    cities: state.firestore.ordered.cities
+    cities: state.firestore.ordered.cities,
+    workerType: state.firestore.ordered.workerType
   };
 };
 
 export default compose(
   connect(mapStateToProps),
-  firestoreConnect([{ collection: "cities" }])
+  firestoreConnect([{ collection: "cities" }]),
+  firestoreConnect([{ collection: "workerType" }])
 )(SearchWorker);
