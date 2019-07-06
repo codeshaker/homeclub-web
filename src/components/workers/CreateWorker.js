@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { createWorker } from "../../store/actions/workerActions";
 
 class CreateWorker extends Component {
   state = {
@@ -22,7 +24,8 @@ class CreateWorker extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    console.log(this.state);
+    //console.log(this.state);
+    this.props.createWorker(this.state);
   };
 
   render() {
@@ -32,56 +35,56 @@ class CreateWorker extends Component {
           <h5 className="grey-text text-darken-3">Create Worker</h5>
 
           <div className="input-field">
-            <label type="string">Name</label>
-            <input type="string" id="name" onChange={this.handleChange} />
+            <label type="text">Name</label>
+            <input type="text" id="name" onChange={this.handleChange} />
           </div>
 
           <div className="input-field">
             <label type="number">Mobile No</label>
-            <input type="number" id="phone" onChange={this.handleChange} />
+            <input type="tel" id="phone" onChange={this.handleChange} />
           </div>
 
           <div className="input-field">
-            <label htmlFor="string">Address</label>
-            <input type="string" id="address" onChange={this.handleChange} />
+            <label htmlFor="text">Address</label>
+            <input type="text" id="address" onChange={this.handleChange} />
           </div>
 
           <div className="input-field">
-            <label type="string">Gender</label>
-            <input type="string" id="gender" onChange={this.handleChange} />
+            <label type="text">Gender</label>
+            <input type="text" id="gender" onChange={this.handleChange} />
           </div>
 
           <div className="input-field">
-            <label type="string">Worker Type</label>
-            <input type="string" id="workerType" onChange={this.handleChange} />
+            <label type="text">Worker Type</label>
+            <input type="text" id="workerType" onChange={this.handleChange} />
           </div>
           <div className="input-field">
-            <label type="string">Aadhar Verified</label>
+            <label type="text">Aadhar Verified</label>
             <input
-              type="string"
+              type="text"
               id="isAadharVerified"
               onChange={this.handleChange}
             />
           </div>
           <div className="input-field">
-            <label type="string">Police Verified</label>
+            <label type="text">Police Verified</label>
             <input
-              type="string"
+              type="text"
               id="isPoliceVerified"
               onChange={this.handleChange}
             />
           </div>
           <div className="input-field">
-            <label type="string">Speciality</label>
-            <input type="string" id="speciality" onChange={this.handleChange} />
+            <label type="text">Speciality</label>
+            <input type="text" id="speciality" onChange={this.handleChange} />
           </div>
           <div className="input-field">
-            <label type="string">Language</label>
-            <input type="string" id="language" onChange={this.handleChange} />
+            <label type="text">Language</label>
+            <input type="text" id="language" onChange={this.handleChange} />
           </div>
           <div className="input-field">
-            <label type="string">Package</label>
-            <input type="string" id="package" onChange={this.handleChange} />
+            <label type="text">Package</label>
+            <input type="text" id="package" onChange={this.handleChange} />
           </div>
 
           <div className="input-field">
@@ -95,4 +98,15 @@ class CreateWorker extends Component {
   }
 }
 
-export default CreateWorker;
+const mapStateToDispatch = dispatch => {
+  return {
+    createWorker: worker => {
+      dispatch(createWorker(worker));
+    }
+  };
+};
+
+export default connect(
+  null,
+  mapStateToDispatch
+)(CreateWorker);

@@ -1,26 +1,29 @@
 import React from "react";
 
-const WorkerSummary = () => {
+const WorkerSummary = ({ worker }) => {
   return (
-    <li class="collection-item avatar">
-      <div className="container">
-        <button>
-          <img
-            src="https://pbs.twimg.com/profile_images/1111729635610382336/_65QFl7B_400x400.png"
-            alt=""
-            class="circle"
-          />
-          <span class="title">Name : Kanta bai</span>
-          <br />
-          <span class="title">Gender : Female</span>
-          <br />
-          <span class="title">Cook|Maid</span>
-          <br />
-          <span class="title">Aadhar Verified \/</span>
-          <span class="title">Police Verified \/</span>
-        </button>
+    <div className="card horizontal">
+      <div className="card-image">
+        <img src={worker.imagePath} />
       </div>
-    </li>
+      <div class="card-stacked">
+        <div class="card-content">
+          <span class="title">Name : {worker.name}</span>
+          <br />
+          <span class="title">Gender : {worker.gender}</span>
+          <br />
+          <span class="title">Worker Type : {worker.workerType}</span>
+          <br />
+          <span class="title">
+            Aadhar Verified : {worker.aadharVerified} |{" "}
+          </span>
+          <span class="title">Police Verified : {worker.policeVerified}</span>
+        </div>
+        <div class="card-action">
+          <a href="#">Hire | Book</a>
+        </div>
+      </div>
+    </div>
   );
 };
 

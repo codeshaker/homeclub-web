@@ -23,13 +23,18 @@ class SignIn extends Component {
         <form onSubmit={this.handleSubmit} className="white">
           <h5 className="grey-text text-darken-3">Sign In</h5>
           <div className="input-field">
-            <label type="number">Mobile No</label>
-            <input type="number" id="phone" onChange={this.handleChange} />
+            <label for="icon_telephone">Mobile Number</label>
+            <input
+              type="tel"
+              id="phone"
+              class="validate"
+              onChange={this.handleChange}
+            />
           </div>
 
           <div className="input-field">
             <label htmlFor="otp">OTP</label>
-            <input type="number" id="otp" onChange={this.handleChange} />
+            <input type="text" id="otp" onChange={this.handleChange} />
           </div>
 
           <div className="input-field">
