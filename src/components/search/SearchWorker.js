@@ -46,6 +46,7 @@ class SearchWorker extends Component {
       value: "",
       suggestions: [],
       selectedWorkerType: "",
+      selectedGender: "",
       selectedCity: ""
     };
   }
@@ -58,6 +59,13 @@ class SearchWorker extends Component {
     const optionSelected = $("select#workerTypeSelect").val();
     this.setState({
       selectedWorkerType: optionSelected
+    });
+  };
+
+  handleGenderSelectChange = e => {
+    const optionSelected = $("select#genderSelect").val();
+    this.setState({
+      selectedGender: optionSelected
     });
   };
 
@@ -136,6 +144,7 @@ class SearchWorker extends Component {
     // Populate the cities and workerType from firestore
     const { cities } = this.props;
     const { workerType } = this.props;
+    const { genders } = this.props;
 
     // Autosuggest will pass through all these props to the input.
     const inputProps = {
@@ -157,11 +166,32 @@ class SearchWorker extends Component {
               onChange={this.handleWorkerTypeSelectChange}
             >
               <option value="" disabled selected>
-                Enter Worker Type
+                Select Worker Type
               </option>
               {workerType &&
                 workerType.map(type => {
                   return <SearchOption option={type} />;
+                })}
+            </select>
+          </div>
+
+          <br />
+          <br />
+          <br />
+          <br />
+
+          <div className="input-field col s12">
+            <select
+              id="genderSelect"
+              class="browser-default"
+              onChange={this.handleGenderSelectChange}
+            >
+              <option value="" disabled selected>
+                Select Gender
+              </option>
+              {genders &&
+                genders.map(gender => {
+                  return <SearchOption option={gender} />;
                 })}
             </select>
           </div>
@@ -178,7 +208,7 @@ class SearchWorker extends Component {
               onChange={this.handleCitySelectChange}
             >
               <option value="" disabled selected>
-                Enter City
+                Select City
               </option>
               {cities &&
                 cities.map(city => {
@@ -213,7 +243,8 @@ class SearchWorker extends Component {
 const mapStateToProps = state => {
   return {
     cities: state.firestore.ordered.cities,
-    workerType: state.firestore.ordered.workerType
+    workerType: state.firestore.ordered.workerType,
+    genders: state.firestore.ordered.genders
   };
 };
 
@@ -230,5 +261,6 @@ export default compose(
     mapDispatchToProps
   ),
   firestoreConnect([{ collection: "cities" }]),
-  firestoreConnect([{ collection: "workerType" }])
+  firestoreConnect([{ collection: "workerType" }]),
+  firestoreConnect([{ collection: "genders" }])
 )(SearchWorker);
