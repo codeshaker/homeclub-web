@@ -1,20 +1,36 @@
-import { browserHistory } from "../../index";
-
 export const createWorker = worker => {
   return (dispatch, getState, { getFirebase, getFirestore }) => {
-    // make some async call to database
+    // make some async call to database and add worker with custom id
     const firestore = getFirestore();
+
+    let currentWorkersCount = 0;
+
+    // First get current worker count to assign unique worker id
     firestore
-      .collection("workers")
-      .add({
-        ...worker,
-        createdAt: new Date()
-      })
-      .then(() => {
-        dispatch({ type: "CREATE_WORKER", worker });
-      })
-      .catch(err => {
-        dispatch({ type: "CREATE_WORKER_ERROR", err });
+      .collection("workersCount")
+      .doc("count")
+      .get()
+      .then(doc => {
+        if (doc.exists) {
+          console.log("document exisit");
+          currentWorkersCount = doc.data().numberOfWorkers;
+          currentWorkersCount++;
+
+          // Dispatch action for creating worker.
+          firestore
+            .collection("workers")
+            .add({
+              ...worker,
+              id: currentWorkersCount,
+              createdAt: new Date()
+            })
+            .then(() => {
+              dispatch({ type: "CREATE_WORKER", worker });
+            })
+            .catch(err => {
+              dispatch({ type: "CREATE_WORKER_ERROR", err });
+            });
+        }
       });
   };
 };
