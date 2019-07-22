@@ -9,8 +9,8 @@ const WorkerList = ({ workers }) => {
       {workers &&
         workers.map(worker => {
           return (
-            <Link to={"/worker/" + worker.id}>
-              <WorkerSummary worker={worker} key={worker.id} />;
+            <Link to={"/worker/" + worker.id} key={worker.id}>
+              <WorkerSummary worker={worker} />;
             </Link>
           );
         })}
