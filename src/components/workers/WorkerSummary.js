@@ -4,7 +4,7 @@ const WorkerSummary = ({ worker }) => {
   return (
     <div className="card horizontal">
       <div className="card-image">
-        <img src={worker.imagePath} />
+        <img src={worker.imagePath} alt="text" />
       </div>
       <div class="card-stacked">
         <div class="card-content">
@@ -20,7 +20,7 @@ const WorkerSummary = ({ worker }) => {
           <span class="title">Police Verified : {worker.policeVerified}</span>
         </div>
         <div class="card-action">
-          <a href="#">Hire | Book</a>
+          <a href="/worker1">Hire | Book</a>
         </div>
       </div>
     </div>

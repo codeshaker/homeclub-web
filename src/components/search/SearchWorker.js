@@ -1,32 +1,15 @@
 import React, { Component } from "react";
 import M from "materialize-css";
 import Autosuggest from "react-autosuggest";
-import SearchType from "./SearchType";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { firestoreConnect } from "react-redux-firebase";
+import $ from "jquery";
+import { searchWorker } from "../../store/actions/workerActions";
+import SearchOption from "./SearchOption";
 
 // Imagine you have a list of languages that you'd like to autosuggest.
-const areaNames = [
-  {
-    name: "masjid banda"
-  },
-  {
-    name: "mandinaguda"
-  },
-  {
-    name: "kondapur"
-  },
-  {
-    name: "gachibwli"
-  },
-  {
-    name: "chirec"
-  },
-  {
-    name: "miyapur"
-  }
-];
+const areaNames = [];
 
 // Teach Autosuggest how to calculate suggestions for any given input value.
 const getSuggestions = value => {
@@ -61,7 +44,10 @@ class SearchWorker extends Component {
 
     this.state = {
       value: "",
-      suggestions: []
+      suggestions: [],
+      selectedWorkerType: "",
+      selectedGender: "",
+      selectedCity: ""
     };
   }
 
@@ -69,10 +55,72 @@ class SearchWorker extends Component {
     M.AutoInit();
   }
 
+  handleWorkerTypeSelectChange = e => {
+    const optionSelected = $("select#workerTypeSelect").val();
+    this.setState({
+      selectedWorkerType: optionSelected
+    });
+  };
+
+  handleGenderSelectChange = e => {
+    const optionSelected = $("select#genderSelect").val();
+    this.setState({
+      selectedGender: optionSelected
+    });
+  };
+
+  handleCitySelectChange = e => {
+    const optionSelected = $("select#citySelect").val();
+    this.setState({
+      selectedCity: optionSelected
+    });
+
+    // Empty the areaNames json array.
+    while (areaNames.length > 0) {
+      areaNames.pop();
+    }
+
+    // Once user select city , locationNames should populate values of it.
+    const { cities } = this.props;
+
+    if (cities && cities.length > 1) {
+      cities.forEach(city => {
+        if (city["id"] === optionSelected) {
+          const areas = city.areas;
+          if (areas && areas.length > 1) {
+            areas.forEach(area => {
+              const obj = {};
+              obj["name"] = area;
+              areaNames.push(obj);
+            });
+          }
+        }
+      });
+    }
+  };
+
   onChange = (event, { newValue }) => {
     this.setState({
       value: newValue
     });
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+
+    // Check if state has all relevant values
+    if (
+      this.state.value !== "" &&
+      this.state.selectedCity !== "" &&
+      this.state.selectedWorkerType !== ""
+    ) {
+      // dispatch a action for fetching worker list
+      console.log("dispatch action");
+      console.log("in handle submit passed", this.state);
+      this.props.searchWorker(this.state);
+    } else {
+      // show alert
+    }
   };
 
   // Autosuggest will call this function every time you need to update suggestions.
@@ -93,8 +141,10 @@ class SearchWorker extends Component {
   render() {
     const { value, suggestions } = this.state;
 
+    // Populate the cities and workerType from firestore
     const { cities } = this.props;
     const { workerType } = this.props;
+    const { genders } = this.props;
 
     // Autosuggest will pass through all these props to the input.
     const inputProps = {
@@ -103,45 +153,114 @@ class SearchWorker extends Component {
       onChange: this.onChange
     };
 
+    //<SearchType options={workerType} label="Enter WorkerType" />
     return (
       <div className="container center">
-        <SearchType options={workerType} label="Enter WorkerType" />
+        <form onSubmit={this.handleSubmit} className="white">
+          <h5 className="grey-text text-darken-3">Search Worker</h5>
 
-        <br />
-        <br />
-        <br />
-        <br />
+          <div className="input-field col s12">
+            <select
+              id="workerTypeSelect"
+              class="browser-default"
+              onChange={this.handleWorkerTypeSelectChange}
+            >
+              <option value="" disabled selected>
+                Select Worker Type
+              </option>
+              {workerType &&
+                workerType.map(type => {
+                  return <SearchOption option={type} />;
+                })}
+            </select>
+          </div>
 
-        <SearchType options={cities} label="Enter City" />
+          <br />
+          <br />
+          <br />
+          <br />
 
-        <br />
-        <br />
-        <br />
-        <br />
+          <div className="input-field col s12">
+            <select
+              id="genderSelect"
+              class="browser-default"
+              onChange={this.handleGenderSelectChange}
+            >
+              <option value="" disabled selected>
+                Select Gender
+              </option>
+              {genders &&
+                genders.map(gender => {
+                  return <SearchOption option={gender} />;
+                })}
+            </select>
+          </div>
 
-        <Autosuggest
-          suggestions={suggestions}
-          onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-          onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-          getSuggestionValue={getSuggestionValue}
-          renderSuggestion={renderSuggestion}
-          inputProps={inputProps}
-        />
+          <br />
+          <br />
+          <br />
+          <br />
+
+          <div className="input-field col s12">
+            <select
+              id="citySelect"
+              class="browser-default"
+              onChange={this.handleCitySelectChange}
+            >
+              <option value="" disabled selected>
+                Select City
+              </option>
+              {cities &&
+                cities.map(city => {
+                  return <SearchOption option={city} />;
+                })}
+            </select>
+          </div>
+
+          <br />
+          <br />
+          <br />
+          <br />
+
+          <Autosuggest
+            suggestions={suggestions}
+            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+            onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+            getSuggestionValue={getSuggestionValue}
+            renderSuggestion={renderSuggestion}
+            inputProps={inputProps}
+          />
+
+          <div className="input-field">
+            <button className="btn pink lighten-1 z-depth-0">Search</button>
+          </div>
+        </form>
       </div>
     );
   }
 }
 
 const mapStateToProps = state => {
-  console.log(state);
   return {
     cities: state.firestore.ordered.cities,
-    workerType: state.firestore.ordered.workerType
+    workerType: state.firestore.ordered.workerType,
+    genders: state.firestore.ordered.genders
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  console.log("in mapDispatchToProps");
+  return {
+    searchWorker: searchDetails => dispatch(searchWorker(searchDetails))
   };
 };
 
 export default compose(
-  connect(mapStateToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
   firestoreConnect([{ collection: "cities" }]),
-  firestoreConnect([{ collection: "workerType" }])
+  firestoreConnect([{ collection: "workerType" }]),
+  firestoreConnect([{ collection: "genders" }])
 )(SearchWorker);
