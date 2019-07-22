@@ -10,8 +10,9 @@ import { firebaseReducer } from "react-redux-firebase";
 const rootReducer = combineReducers({
   auth: authReducer,
   worker: workerReducer,
-  firestore: firestoreReducer,
-  firebase: firebaseReducer
+  firebase: firebaseReducer,
+  workers: workerReducer,
+  firestore: firestoreReducer
 });
 
 export default rootReducer;
