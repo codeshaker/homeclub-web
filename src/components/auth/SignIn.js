@@ -5,7 +5,8 @@ import { signIn } from "../../store/actions/authActions";
 class SignIn extends Component {
   state = {
     phone: "",
-    otp: ""
+    otp: "",
+    isOTPSent: false
   };
 
   handleChange = e => {
@@ -16,7 +17,16 @@ class SignIn extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.signIn(this.state.phone);
+    if (!this.state.isOTPSent) {
+      this.props.signIn(this.state.phone);
+    } else {
+      window.confirmationResult
+        .confirm(this.state.otp)
+        .then(console.log("login done"));
+    }
+    //console.log(this.state.isOTPSent);
+    this.setState({ isOTPSent: !this.state.isOTPSent });
+    //console.log(this.state.isOTPSent);
   };
 
   render() {
@@ -25,24 +35,32 @@ class SignIn extends Component {
       <div className="container">
         <form onSubmit={this.handleSubmit} className="white">
           <h5 className="grey-text text-darken-3">Sign In</h5>
-          <div className="input-field">
-            <label for="icon_telephone">Mobile Number</label>
-            <input
-              type="tel"
-              id="phone"
-              class="validate"
-              onChange={this.handleChange}
-            />
-          </div>
+          {!this.state.isOTPSent && (
+            <div className="input-field">
+              <label for="icon_telephone">Mobile Number</label>
+              <input
+                type="tel"
+                id="phone"
+                class="validate"
+                onChange={this.handleChange}
+              />
+            </div>
+          )}
+
+          {this.state.isOTPSent && (
+            <div className="input-field">
+              <label htmlFor="otp">OTP</label>
+              <input type="text" id="otp" onChange={this.handleChange} />
+            </div>
+          )}
 
           <div className="input-field">
-            <label htmlFor="otp">OTP</label>
-            <input type="text" id="otp" onChange={this.handleChange} />
-          </div>
-
-          <div className="input-field">
-            <button id="loginButtonId" className="btn pink lighten-1 z-depth-0">
-              Login
+            <button
+              id="loginButtonId"
+              onClick={this.state.isOTPSent ? this.handleSubmit : null}
+              className="btn pink lighten-1 z-depth-0"
+            >
+              {this.state.isOTPSent ? "Login" : "Get OTP"}
             </button>
             <div className="red-text center">
               {authError ? <p>{authError}</p> : null}
