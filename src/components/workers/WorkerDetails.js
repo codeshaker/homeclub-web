@@ -2,10 +2,13 @@ import React from "react";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
+import { Redirect } from "react-router-dom";
 
 const WorkerDetails = props => {
-  const { worker } = props;
+  const { worker, auth } = props;
   if (worker) {
+    if (!auth.uid) return <Redirect to="/signIn" />;
+
     return (
       <div className="container section project-details">
         <span class="title">Name : {worker.name}</span>
@@ -50,7 +53,8 @@ const mapStateToProps = (state, ownProps) => {
   const workers = state.firestore.data.workers;
   const worker = workers ? workers[id] : null;
   return {
-    worker: worker
+    worker: worker,
+    auth: state.firebase.auth
   };
 };
 

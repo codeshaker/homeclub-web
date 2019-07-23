@@ -7,6 +7,7 @@ import { firestoreConnect } from "react-redux-firebase";
 import $ from "jquery";
 import { searchWorker } from "../../store/actions/workerActions";
 import SearchOption from "./SearchOption";
+import { Redirect } from "react-router-dom";
 
 // Imagine you have a list of languages that you'd like to autosuggest.
 const areaNames = [];
@@ -153,6 +154,9 @@ class SearchWorker extends Component {
       onChange: this.onChange
     };
 
+    const { auth } = this.props;
+    if (!auth.uid) return <Redirect to="/signIn" />;
+
     //<SearchType options={workerType} label="Enter WorkerType" />
     return (
       <div className="container center">
@@ -244,7 +248,8 @@ const mapStateToProps = state => {
   return {
     cities: state.firestore.ordered.cities,
     workerType: state.firestore.ordered.workerType,
-    genders: state.firestore.ordered.genders
+    genders: state.firestore.ordered.genders,
+    auth: state.firebase.auth
   };
 };
 
