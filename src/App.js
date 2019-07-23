@@ -14,7 +14,7 @@ function App() {
       <div className="App">
         <Navbar />
         <Switch>
-          <Route exact path="/" component={Dashboard} />
+          <Route exact path="/workerlist" component={Dashboard} />
           <Route exact path="/worker/:id" component={WorkerDetails} />
           <Route exact path="/signin" component={SignIn} />
           <Route exact path="/signup" component={SignUp} />
