@@ -105,7 +105,7 @@ class SearchWorker extends Component {
     });
   };
 
-  handleSubmit = e => {
+  handleSubmit = async e => {
     e.preventDefault();
 
     // Check if state has all relevant values
@@ -117,7 +117,9 @@ class SearchWorker extends Component {
       // dispatch a action for fetching worker list
       console.log("dispatch action");
       console.log("in handle submit passed", this.state);
-      this.props.searchWorker(this.state);
+      this.props.searchWorker(this.state).then(() => {
+        this.props.history.push("/workerlist");
+      });
     } else {
       // show alert
     }
@@ -251,7 +253,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   console.log("in mapDispatchToProps");
   return {
-    searchWorker: searchDetails => dispatch(searchWorker(searchDetails))
+    searchWorker: async searchDetails => dispatch(searchWorker(searchDetails))
   };
 };
 

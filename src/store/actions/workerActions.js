@@ -52,18 +52,21 @@ export const searchWorker = searchDetails => {
       .where("areas", "array-contains", searchDetails.value)
       .limit(25);
 
-    relevantWorkers
+    return relevantWorkers
       .get()
       .then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
           console.log(doc.id, " => ", doc.data());
           const worker = doc.data();
           // Adding new id property.
-          worker["id"] = doc.id;
+          //worker["id"] = doc.id;
           workers.push(worker);
         });
       })
-      .then(() => dispatch({ type: "SEARCH_WORKER", workers }))
+      .then(updatedWorkerList => {
+        dispatch({ type: "SEARCH_WORKER", workers });
+        return updatedWorkerList;
+      })
       .catch(err => {
         dispatch({ type: "SEARCH_WORKER_ERROR", err });
       });
