@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { signIn } from "../../store/actions/authActions";
+import { trySignUp } from "../../store/actions/authActions";
 import { Redirect } from "react-router-dom";
 
 class SignIn extends Component {
@@ -15,6 +16,10 @@ class SignIn extends Component {
       [e.target.id]: e.target.value
     });
   };
+
+  componentWillUnmount() {
+    this.props.trySignUp();
+  }
 
   handleSubmit = e => {
     e.preventDefault();
@@ -84,7 +89,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    signIn: phoneNumber => dispatch(signIn(phoneNumber))
+    signIn: phoneNumber => dispatch(signIn(phoneNumber)),
+    trySignUp: () => dispatch(trySignUp())
   };
 };
 
