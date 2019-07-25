@@ -5,7 +5,7 @@ import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import { Redirect } from "react-router-dom";
 
-class Dashboard extends Component {
+class WorkerDashboard extends Component {
   render() {
     const { workers, auth } = this.props;
     if (!auth.uid) return <Redirect to="/signIn" />;
@@ -23,7 +23,7 @@ class Dashboard extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log("in dashboard");
+  console.log("in WorkerDashboard");
   console.log(state);
   return {
     //workers: state.firestore.ordered.workers
@@ -35,4 +35,4 @@ const mapStateToProps = state => {
 export default compose(
   connect(mapStateToProps),
   firestoreConnect([{ collection: "workers" }])
-)(Dashboard);
+)(WorkerDashboard);
