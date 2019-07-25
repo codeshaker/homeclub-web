@@ -3,10 +3,13 @@ import WorkerList from "../workers/WorkerList";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
+import { Redirect } from "react-router-dom";
 
 class WorkerDashboard extends Component {
   render() {
-    const { workers } = this.props;
+    const { workers, auth } = this.props;
+    if (!auth.uid) return <Redirect to="/signIn" />;
+
     return (
       <div className="dashboard container">
         <div className="row">
@@ -24,7 +27,8 @@ const mapStateToProps = state => {
   console.log(state);
   return {
     //workers: state.firestore.ordered.workers
-    workers: state.workers.workers
+    workers: state.workers.workers,
+    auth: state.firebase.auth
   };
 };
 

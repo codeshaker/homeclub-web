@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
+import { Redirect } from "react-router-dom";
 import M from "materialize-css";
 
 class WorkerDetails extends Component {
@@ -74,7 +75,9 @@ class WorkerDetails extends Component {
   };
 
   render() {
-    //const { worker } = this.props;
+    const { worker, auth } = this.props;
+
+    if (!auth.uid) return <Redirect to="/signIn" />;
 
     const timeSlots = "100011000010001110001110";
 
@@ -214,7 +217,8 @@ const mapStateToProps = (state, ownProps) => {
   // Reducing the id with one as starting index is from 0
   const worker = workers ? workers[id - 1] : null;
   return {
-    worker: worker
+    worker: worker,
+    auth: state.firebase.auth
   };
 };
 

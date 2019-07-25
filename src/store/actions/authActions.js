@@ -43,3 +43,60 @@ export const signOut = () => {
       });
   };
 };
+
+export const signUp = newUser => {
+  return (dispatch, getState, { getFirestore }) => {
+    const firestore = getFirestore();
+    const state = getState();
+
+    return firestore
+      .collection("users")
+      .doc(state.firebase.auth.uid)
+      .set({
+        Name: newUser.name,
+        Phone: newUser.phone,
+        Email: newUser.email,
+        Address: newUser.address,
+        Gender: newUser.gender,
+        DateOfBirth: newUser.dateOfBirth
+      })
+      .then(() => {
+        dispatch({ type: "SIGNUP_SUCCESS", newUser });
+      })
+      .catch(err => {
+        dispatch({ type: "SIGNUP_ERROR", err });
+      });
+  };
+};
+
+export const trySignUp = () => {
+  console.log("Inside stry sign up");
+  return (dispatch, getState, { getFirestore }) => {
+    const firestore = getFirestore();
+    const state = getState();
+    console.log(state.firebase.auth.uid);
+    firestore
+      .collection("users")
+      .doc(state.firebase.auth.uid)
+      .get();
+
+    return firestore
+      .collection("users")
+      .doc(state.firebase.auth.uid)
+      .get()
+      .then(docSnapShot => {
+        if (docSnapShot.exists) {
+          firestore
+            .collection("users")
+            .doc(state.firebase.auth.uid)
+            .onSnapshot(doc => {
+              const newUser = doc.data();
+              dispatch({ type: "SIGNUP_SUCCESS", newUser });
+            });
+        }
+      })
+      .catch(err => {
+        dispatch({ type: "SIGNUP_ERROR", err });
+      });
+  };
+};

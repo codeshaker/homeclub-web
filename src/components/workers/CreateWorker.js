@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { createWorker } from "../../store/actions/workerActions";
 import M from "materialize-css";
 import { storage } from "../../config/fbConfig";
+import { Redirect } from "react-router-dom";
 
 class CreateWorker extends Component {
   state = {
@@ -108,6 +109,9 @@ class CreateWorker extends Component {
   };
 
   render() {
+    const { auth } = this.props;
+    if (!auth.uid) return <Redirect to="/signIn" />;
+
     return (
       <div className="container">
         <form onSubmit={this.handleSubmit} className="white">
@@ -247,6 +251,12 @@ class CreateWorker extends Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    auth: state.firebase.auth
+  };
+};
+
 const mapStateToDispatch = dispatch => {
   return {
     createWorker: worker => {
@@ -256,6 +266,6 @@ const mapStateToDispatch = dispatch => {
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapStateToDispatch
 )(CreateWorker);
