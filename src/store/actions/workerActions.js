@@ -19,9 +19,9 @@ export const createWorker = worker => {
           // Dispatch action for creating worker.
           firestore
             .collection("workers")
-            .add({
+            .doc(currentWorkersCount.toString())
+            .set({
               ...worker,
-              id: currentWorkersCount,
               createdAt: new Date()
             })
             .then(() => {

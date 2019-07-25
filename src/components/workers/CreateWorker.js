@@ -145,8 +145,8 @@ class CreateWorker extends Component {
 
           <div className="input-field">
             <select multiple id="city" onChange={this.handleChange}>
-              <option value="Hyderabad">Hyderabad</option>
-              <option value="Bangalore">Bangalore</option>
+              <option value="hyderabad">hyderabad</option>
+              <option value="bangalore">bangalore</option>
             </select>
             <label>City</label>
           </div>
@@ -160,18 +160,18 @@ class CreateWorker extends Component {
               <option value="masjidbanda">masjid banda</option>
               <option value="chirec">chirec</option>
               <option value="whitefield">whitefield</option>
-              <option value="masjidbanda">shilpa park</option>
-              <option value="chirec">kothaguda</option>
-              <option value="whitefield">indiranagar</option>
-              <option value="masjidbanda">raghvendra colony</option>
+              <option value="shilpa park">shilpa park</option>
+              <option value="kothaguda">kothaguda</option>
+              <option value="indiranagar">indiranagar</option>
+              <option value="raghvendra colony">raghvendra colony</option>
             </select>
             <label>Areas</label>
           </div>
 
           <div className="input-field">
             <select multiple id="gender" onChange={this.handleChange}>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
+              <option value="male">male</option>
+              <option value="female">female</option>
               <option value="Other">Other</option>
             </select>
             <label>Gender</label>
@@ -179,8 +179,8 @@ class CreateWorker extends Component {
 
           <div className="input-field" onChange={this.handleChange}>
             <select multiple id="workerType" onChange={this.handleChange}>
-              <option value="Cook">Cook</option>
-              <option value="Maid">Maid</option>
+              <option value="cook">cook</option>
+              <option value="maid">maid</option>
             </select>
             <label>Worker Type</label>
           </div>

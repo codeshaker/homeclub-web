@@ -1,7 +1,8 @@
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Navbar from "./components/layout/Navbar";
-import Dashboard from "./components/dashboard/Dashboard";
+import WorkerDashboard from "./components/dashboard/WorkerDashboard";
+import MainDashboard from "./components/dashboard/MainDashboard";
 import WorkerDetails from "./components/workers/WorkerDetails";
 import SignIn from "./components/auth/SignIn";
 import SignUp from "./components/auth/SignUp";
@@ -14,7 +15,8 @@ function App() {
       <div className="App">
         <Navbar />
         <Switch>
-          <Route exact path="/workerlist" component={Dashboard} />
+          <Route exact path="/" component={MainDashboard} />
+          <Route exact path="/workerlist" component={WorkerDashboard} />
           <Route exact path="/worker/:id" component={WorkerDetails} />
           <Route exact path="/signin" component={SignIn} />
           <Route exact path="/signup" component={SignUp} />
