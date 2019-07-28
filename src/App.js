@@ -8,6 +8,7 @@ import SignIn from "./components/auth/SignIn";
 import SignUp from "./components/auth/SignUp";
 import CreateWorker from "./components/workers/CreateWorker";
 import SearchWorker from "./components/search/SearchWorker";
+import Payment from "./components/payment/payment";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route exact path="/signup" component={SignUp} />
           <Route exact path="/createworker" component={CreateWorker} />
           <Route exact path="/searchworker" component={SearchWorker} />
+          <Route exact path="/payment" component={Payment} />
         </Switch>
       </div>
     </BrowserRouter>
