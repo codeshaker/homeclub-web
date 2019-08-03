@@ -4,49 +4,77 @@ import { firestoreConnect } from "react-redux-firebase";
 import { compose } from "redux";
 import { Redirect } from "react-router-dom";
 import M from "materialize-css";
+import { confirmBooking } from "../../store/actions/bookingActions";
 
 class WorkerDetails extends Component {
-  state = {
-    timeslots: [],
-    package: "",
-    startDate: "",
-    numberPeople: 0
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      timeslots: [],
+      package: "",
+      startDate: "",
+      numberOfPeople: 0,
+      monthlyCost: 0,
+      workerId: "",
+      userId: ""
+    };
+  }
 
-  handleSubmit() {
+  handleSubmit = e => {
+    e.preventDefault();
+
+    console.log("inside handle submit", this.state);
     if (
-      this.state.package === "" ||
-      this.state.numberPeople === "" ||
+      this.state.monthlyCost === 0 ||
       this.state.startDate === "" ||
-      this.state.timeslots.length <= 1
+      this.state.timeslots.length < 1
     ) {
       console.log("some of the value did not got filled");
       return null;
     }
 
+    this.props.confirmBooking(this.state);
+
     // Dispatch action of creating a new booking document.
-  }
+  };
 
-  computeCost() {
-    console.log("inside compute cost");
-    const pack = {
-      "1": 800,
-      "2": 1000,
-      "3": 1000,
-      "4": 1300,
-      "5": 1500,
-      "6": 1300,
-      "7": 2000
-    };
+  computeCost = e => {
+    const { worker } = this.props;
+    const pack = worker ? worker.package : null;
+    const workerType = worker ? worker.workerType : null;
+    let computedCost = 0;
 
-    if (this.state.package === "" || this.state.numberPeople === "") return 0;
+    if (pack == null || workerType == null) return computedCost;
 
-    return pack[this.state.package] * this.state.numberPeople;
-  }
+    if (workerType === "cook") {
+      if (this.state.package !== "" || this.state.numberOfPeople !== "")
+        computedCost = pack[this.state.package] * this.state.numberOfPeople;
+    } else {
+      if (this.state.package !== "") computedCost = pack[this.state.package];
+    }
+
+    return computedCost;
+  };
 
   componentDidMount() {
     M.AutoInit();
+    console.log("in component did mount");
+
+    const { worker, auth } = this.props;
+
+    // Setting the workerId in local state property
+    if (worker) {
+      this.setState({
+        workerId: worker.id
+      });
+    }
+
+    // Setting the userId in local state property
+    this.setState({
+      userId: auth.uid
+    });
   }
+
   handleMultipleSelectChange = e => {
     var options = e.target.options;
     var value = [];
@@ -59,29 +87,36 @@ class WorkerDetails extends Component {
     this.setState({
       [e.target.id]: value
     });
-    console.log(this.state);
 
-    // calling the compute cost
-    this.computeCost();
+    // Setting the computed cost in local state property.
+    this.setState({
+      monthlyCost: this.computeCost()
+    });
   };
 
   handleChange = e => {
     this.setState({
       [e.target.id]: e.target.value
     });
-    console.log(this.state);
-    // calling the compute cost
-    this.computeCost();
+
+    // Setting the computed cost in local state property.
+    this.setState({
+      monthlyCost: this.computeCost()
+    });
   };
 
+  cookFullDetails = props => {};
+
   render() {
-    const { worker, auth } = this.props;
+    const { auth, worker } = this.props;
 
     if (!auth.uid) return <Redirect to="/signIn" />;
 
-    const timeSlots = "100011000010001110001110";
+    const timeSlots = worker ? worker.timeSlot : null;
+    const workerType = worker ? worker.workerType : null;
 
-    const packmapping = {
+    // cook package mapping
+    const cookPackageMapping = {
       "1": "breakfast (1 time)",
       "2": "lunch (1 time)",
       "3": "dinner(1 time)",
@@ -91,16 +126,29 @@ class WorkerDetails extends Component {
       "7": "breakfast + lunch + dinner (2 times)"
     };
 
+    // maid package mapping
+    const maidPackageMapping = {
+      "1": "1 BHK",
+      "2": "2 BHK",
+      "3": "3 BHK",
+      "4": "4 BHK"
+    };
+
+    // choosing the package based on worker type
+    const packageMapping =
+      workerType === "cook" ? cookPackageMapping : maidPackageMapping;
+
     let index = 0;
 
-    if (true) {
+    // Render when we are getting proper workerType
+    if (worker) {
       return (
         <div className="dashboard container">
           <div className="row">
             <div className="col s12 m6">
               <div className="card-image">
                 <img
-                  src="https://firebasestorage.googleapis.com/v0/b/homeclub-69cc7.appspot.com/o/workerImages%2Falastair-cook.jpg?alt=media&token=a07e5dc9-cdba-4887-a0f9-1cd4c9d0f3b2"
+                  src={worker.imageUrl}
                   alt="text"
                   width="100dpx"
                   height="200dpx"
@@ -109,68 +157,91 @@ class WorkerDetails extends Component {
             </div>
             <div className="col s12 m5 offset-m1">
               <div>
-                <span class="title">Name : Nitesh Kumar</span>
+                <span class="title">Name : {worker.name}</span>
                 <br />
-                <span class="title">Gender : Male</span>
+                <span class="title">Gender : {worker.gender}</span>
                 <br />
-                <span class="title">WorkerType : Cook</span>
+                <span class="title">WorkerType : {worker.workerType}</span>
                 <br />
               </div>
             </div>
           </div>
+          {{ workerType } === "cook" ? (
+            <div className="input-field col s12">
+              <select
+                multiple
+                id="timeslots"
+                onChange={this.handleMultipleSelectChange}
+              >
+                <option value="" disabled selected>
+                  Select Available TimeSlots
+                </option>
 
-          <div className="input-field col s12">
-            <select
-              multiple
-              id="timeslots"
-              onChange={this.handleMultipleSelectChange}
-            >
-              <option value="" disabled selected>
-                Select Available TimeSlots
-              </option>
+                {timeSlots &&
+                  timeSlots.split("").map(interval => {
+                    index++;
 
-              {timeSlots &&
-                timeSlots.split("").map(interval => {
-                  index++;
+                    //available time slot is deonted by 1
+                    if (interval === "1") {
+                      return (
+                        <option value={index - 1}>
+                          {index - 1} - {index}
+                        </option>
+                      );
+                    } else return null;
+                  })}
+              </select>
+              <label>TimeSlots</label>
+            </div>
+          ) : (
+            <div className="input-field col s12">
+              <select id="timeslots" onChange={this.handleChange}>
+                <option value="" disabled selected>
+                  Select One TimeSlots
+                </option>
 
-                  //available time slot is deonted by 1
-                  if (interval === "1") {
-                    return (
-                      <option value={index - 1}>
-                        {index - 1} - {index}
-                      </option>
-                    );
-                  } else return null;
-                })}
-            </select>
-            <label>TimeSlots</label>
-          </div>
+                {timeSlots &&
+                  timeSlots.split("").map(interval => {
+                    index++;
 
+                    //available time slot is deonted by 1
+                    if (interval === "1") {
+                      return (
+                        <option value={index - 1}>
+                          {index - 1} - {index}
+                        </option>
+                      );
+                    } else return null;
+                  })}
+              </select>
+              <label>TimeSlots</label>
+            </div>
+          )}
           <div className="input-field col s12">
             <select id="package" onChange={this.handleChange}>
               <option value="" disabled selected>
                 Select Package
               </option>
-              {packmapping &&
-                Object.keys(packmapping).map((key, index) => {
-                  return <option value={key}>{packmapping[key]}</option>;
+              {packageMapping &&
+                Object.keys(packageMapping).map((key, index) => {
+                  return <option value={key}>{packageMapping[key]}</option>;
                 })}
             </select>
             <label>Package</label>
           </div>
 
-          <div className="input-field">
-            <label htmlFor="numberPeople">Enter Number Of People</label>
-            <input
-              type="number"
-              id="numberPeople"
-              onChange={this.handleChange}
-            />
-          </div>
-
+          {{ workerType } === "cook" ? (
+            <div className="input-field">
+              <label htmlFor="numberPeople">Enter Number Of People</label>
+              <input
+                type="number"
+                id="numberOfPeople"
+                onChange={this.handleChange}
+              />
+            </div>
+          ) : null}
           <br />
           <br />
-
           <div className="input-field">
             <input
               type="date"
@@ -179,21 +250,19 @@ class WorkerDetails extends Component {
               onChange={this.handleChange}
             />
           </div>
-
           <div className="input-field col s6">
             <label>Total Monthly Cost</label>
             <input
               value={this.computeCost()}
-              id="cost"
+              id="monthlyCost"
               type="number"
               class="validate"
             />
           </div>
-
           <br />
           <br />
           <button
-            onClick={this.handleSubmit()}
+            onClick={this.handleSubmit}
             className="btn pink lighten-1 z-depth-0"
           >
             Book
@@ -204,7 +273,7 @@ class WorkerDetails extends Component {
     } else {
       return (
         <div className="container center">
-          <p>Loading Worker Details...</p>
+          <p>Error Loading Worker Details...</p>
         </div>
       );
     }
@@ -213,17 +282,38 @@ class WorkerDetails extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const id = ownProps.match.params.id;
+  console.log("workerDetails mapStateToProps id ", id);
   const workers = state.workers.workers;
-  // Reducing the id with one as starting index is from 0
-  const worker = workers ? workers[id - 1] : null;
+  let worker = null;
+
+  // Iterating the array of workers and choosing the worker based on id property matched.
+  if (workers) {
+    for (var i = 0; i < workers.length; i++) {
+      if (workers[i].id === id) {
+        worker = workers[i];
+        break;
+      }
+    }
+  }
+  console.log("workerDetails mapStateToProps ", worker);
   return {
     worker: worker,
+    user: state.user,
     auth: state.firebase.auth
   };
 };
 
+const mapDispatchToProps = dispatch => {
+  return {
+    confirmBooking: bookingDetails => dispatch(confirmBooking(bookingDetails))
+  };
+};
+
 export default compose(
-  connect(mapStateToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
   firestoreConnect([
     {
       collection: "workers"
