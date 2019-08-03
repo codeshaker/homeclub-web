@@ -166,17 +166,13 @@ class WorkerDetails extends Component {
               </div>
             </div>
           </div>
-          {{ workerType } === "cook" ? (
+          {workerType === "cook" ? (
             <div className="input-field col s12">
               <select
                 multiple
                 id="timeslots"
                 onChange={this.handleMultipleSelectChange}
               >
-                <option value="" disabled selected>
-                  Select Available TimeSlots
-                </option>
-
                 {timeSlots &&
                   timeSlots.split("").map(interval => {
                     index++;
@@ -230,7 +226,7 @@ class WorkerDetails extends Component {
             <label>Package</label>
           </div>
 
-          {{ workerType } === "cook" ? (
+          {workerType === "cook" ? (
             <div className="input-field">
               <label htmlFor="numberPeople">Enter Number Of People</label>
               <input
