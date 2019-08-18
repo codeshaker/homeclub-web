@@ -39,3 +39,28 @@ export const confirmBooking = bookingDetails => {
       });
   };
 };
+
+export const confirmTrialBooking = bookingDetails => {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const firestore = getFirestore();
+    const bookingDatabase = firestore.collection("trialBookings");
+
+    // First tell him to do trial booking payment.
+
+    // Dispatch action for creating new booking.
+    bookingDatabase
+      .add({
+        ...bookingDetails,
+        createdAt: new Date()
+      })
+      .then(bookingDocRef => {
+        console.log("new trial booking doc id", bookingDocRef.id);
+
+        // update the worker doc
+        dispatch({ type: "CREATE_TRIAL_BOOKING", bookingDetails });
+      })
+      .catch(err => {
+        dispatch({ type: "CREATE_TRIAL_BOOKING_ERROR", err });
+      });
+  };
+};
