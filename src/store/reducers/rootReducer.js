@@ -4,6 +4,7 @@ import { combineReducers } from "redux";
 import { firestoreReducer } from "redux-firestore";
 import { firebaseReducer } from "react-redux-firebase";
 import userReducer from "./userReducer";
+import bookingReducer from "./bookingReducer";
 
 /* CombinerReducer is creating object where the state in Store will having 2 property auth & worker 
     pointing to different reducers */
@@ -13,7 +14,8 @@ const rootReducer = combineReducers({
   workers: workerReducer,
   firebase: firebaseReducer,
   firestore: firestoreReducer,
-  user: userReducer
+  user: userReducer,
+  booking: bookingReducer
 });
 
 export default rootReducer;
