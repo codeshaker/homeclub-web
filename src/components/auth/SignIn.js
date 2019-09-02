@@ -3,6 +3,16 @@ import { connect } from "react-redux";
 import { signIn } from "../../store/actions/authActions";
 import { trySignUp } from "../../store/actions/authActions";
 import { Redirect } from "react-router-dom";
+import Container from "@material-ui/core/Container";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Avatar from "@material-ui/core/Avatar";
+import Typography from "@material-ui/core/Typography";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import { withStyles } from "@material-ui/styles";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 
 class SignIn extends Component {
   state = {
@@ -36,49 +46,103 @@ class SignIn extends Component {
   };
 
   render() {
-    const { authError, auth } = this.props;
+    const { authError, auth, classes } = this.props;
     if (auth.uid) return <Redirect to="/" />;
 
     return (
-      <div className="container">
-        <form onSubmit={this.handleSubmit} className="white">
-          <h5 className="grey-text text-darken-3">Sign In</h5>
-          {!this.state.isOTPSent && (
-            <div className="input-field">
-              <label for="icon_telephone">Mobile Number</label>
-              <input
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <form onSubmit={this.handleSubmit} className={classes.form}>
+            {!this.state.isOTPSent && (
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
                 type="tel"
                 id="phone"
-                class="validate"
+                label="Phone"
+                name="phone"
+                autoComplete="phone"
+                autoFocus
                 onChange={this.handleChange}
               />
-            </div>
-          )}
+            )}
 
-          {this.state.isOTPSent && (
+            {this.state.isOTPSent && (
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="otp"
+                label="OTP"
+                name="otp"
+                autoFocus
+                onChange={this.handleChange}
+              />
+            )}
+
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+
             <div className="input-field">
-              <label htmlFor="otp">OTP</label>
-              <input type="text" id="otp" onChange={this.handleChange} />
-            </div>
-          )}
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                id="loginButtonId"
+                onClick={this.state.isOTPSent ? this.handleSubmit : null}
+                className={classes.submit}
+              >
+                {this.state.isOTPSent ? "Login" : "Get OTP"}
+              </Button>
 
-          <div className="input-field">
-            <button
-              id="loginButtonId"
-              onClick={this.state.isOTPSent ? this.handleSubmit : null}
-              className="btn pink lighten-1 z-depth-0"
-            >
-              {this.state.isOTPSent ? "Login" : "Get OTP"}
-            </button>
-            <div className="red-text center">
-              {authError ? <p>{authError}</p> : null}
+              <div className="red-text center">
+                {authError ? <p>{authError}</p> : null}
+              </div>
             </div>
-          </div>
-        </form>
-      </div>
+          </form>
+        </div>
+      </Container>
     );
   }
 }
+
+const styles = theme => ({
+  "@global": {
+    body: {
+      backgroundColor: "white"
+    }
+  },
+  paper: {
+    marginTop: 50,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
+  },
+  avatar: {
+    margin: 1,
+    backgroundColor: "red"
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: 1
+  },
+  submit: {
+    margin: (3, 0, 2)
+  }
+});
 
 const mapStateToProps = state => {
   return {
@@ -97,4 +161,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SignIn);
+)(withStyles(styles)(SignIn));
