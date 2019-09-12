@@ -1,4 +1,5 @@
 export const signIn = phoneNumber => {
+  console.log("inside signIn action creator");
   return (dispatch, getState, { getFirebase }) => {
     const firebase = getFirebase();
     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
@@ -56,9 +57,7 @@ export const signUp = newUser => {
         Name: newUser.name,
         Phone: newUser.phone,
         Email: newUser.email,
-        Address: newUser.address,
-        Gender: newUser.gender,
-        DateOfBirth: newUser.dateOfBirth
+        Address: newUser.address
       })
       .then(() => {
         dispatch({ type: "SIGNUP_SUCCESS", newUser });

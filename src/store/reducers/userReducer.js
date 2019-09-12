@@ -2,9 +2,7 @@ const initState = {
   name: "",
   phone: "",
   email: "",
-  address: "",
-  gender: "",
-  dateOfBirth: ""
+  address: ""
 };
 
 const userReducer = (state = initState, action) => {
@@ -14,9 +12,7 @@ const userReducer = (state = initState, action) => {
       state.name = action.newUser.Name;
       state.address = action.newUser.Address;
       state.phone = action.newUser.Phone;
-      state.gender = action.newUser.Gender;
       state.email = action.newUser.Email;
-      state.dateOfBirth = action.newUser.DateOfBirth;
       return state;
 
     case "SIGNUP_ERROR":
